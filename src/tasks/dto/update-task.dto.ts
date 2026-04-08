@@ -1,5 +1,6 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { Task, TaskStatus } from '../task.model';
+import { TaskStatus } from '../task-status.enum';
+import { Task } from '../task.entity';
 
 export class UpdateTaskDto implements Partial<
   Pick<Task, 'title' | 'description' | 'status'>
