@@ -1,17 +1,12 @@
-import { Task } from '../task.model';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { TaskStatus } from '../task.model';
 
-export class GetTasksFilterDto implements GetTasksFilterDto {
-  status?: Task['status'];
+export class GetTasksFilterDto {
+  @IsOptional()
+  @IsEnum(TaskStatus)
+  status?: TaskStatus;
+
+  @IsOptional()
+  @IsString()
   search?: string;
-
-  constructor({
-    status,
-    search,
-  }: {
-    status?: Task['status'];
-    search?: string;
-  }) {
-    this.status = status;
-    this.search = search;
-  }
 }

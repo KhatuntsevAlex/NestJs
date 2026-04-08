@@ -1,19 +1,18 @@
-import { Task } from '../task.model';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { Task, TaskStatus } from '../task.model';
 
 export class UpdateTaskDto implements Partial<
   Pick<Task, 'title' | 'description' | 'status'>
 > {
+  @IsOptional()
+  @IsString()
   title?: Task['title'];
-  description?: Task['description'];
-  status?: Task['status'];
 
-  constructor({
-    title,
-    description,
-    status,
-  }: Partial<Pick<Task, 'title' | 'description' | 'status'>>) {
-    this.title = title;
-    this.description = description;
-    this.status = status;
-  }
+  @IsOptional()
+  @IsString()
+  description?: Task['description'];
+
+  @IsOptional()
+  @IsEnum(TaskStatus)
+  status?: TaskStatus;
 }

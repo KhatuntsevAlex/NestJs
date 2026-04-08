@@ -1,11 +1,12 @@
+import { IsNotEmpty, IsString } from 'class-validator';
 import { Task } from '../task.model';
 
 export class CreateTaskDto implements Pick<Task, 'title' | 'description'> {
-  title: Task['title'];
-  description: Task['description'];
+  @IsNotEmpty()
+  @IsString()
+  title!: Task['title'];
 
-  constructor({ title, description }: Pick<Task, 'title' | 'description'>) {
-    this.title = title;
-    this.description = description;
-  }
+  @IsNotEmpty()
+  @IsString()
+  description!: Task['description'];
 }
