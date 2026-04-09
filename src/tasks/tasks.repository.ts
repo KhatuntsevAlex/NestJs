@@ -1,20 +1,27 @@
 import { Brackets, DataSource, Repository } from 'typeorm';
 import { Task } from './task.entity';
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { CreateTaskDto, GetTasksFilterDto } from './dto';
 import { TaskStatus } from './task-status.enum';
 import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class TasksRepository extends Repository<Task> {
+  private readonly logger = new Logger('TasksRepository', { timestamp: true });
+
   constructor(private readonly dataSource: DataSource) {
     super(Task, dataSource.createEntityManager());
   }
 
   async getTasks(
-    { status, search }: GetTasksFilterDto,
+    getTasksFilterDto: GetTasksFilterDto,
     user: User,
   ): Promise<Task[]> {
+    const { status, search } = getTasksFilterDto;
     const query = this.createQueryBuilder('task');
 
     query.where({ user });
@@ -42,9 +49,16 @@ export class TasksRepository extends Repository<Task> {
       );
     }
 
-    const tasks = await query.getMany();
-
-    return tasks;
+    try {
+      const tasks = await query.getMany();
+      return tasks;
+    } catch (error) {
+      this.logger.error(
+        `Failed to retrieve tasks from user "${user.username}". Filters: ${JSON.stringify(getTasksFilterDto)}`,
+        (error as Error).stack,
+      );
+      throw new InternalServerErrorException();
+    }
   }
 
   async createTask(
