@@ -1,17 +1,14 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { TaskStatus } from '../task-status.enum';
-import { Task } from '../task.entity';
 
-export class UpdateTaskDto implements Partial<
-  Pick<Task, 'title' | 'description' | 'status'>
-> {
+export class UpdateTaskDto {
   @IsOptional()
   @IsString()
-  title?: Task['title'];
+  title?: string;
 
   @IsOptional()
   @IsString()
-  description?: Task['description'];
+  description?: string;
 
   @IsOptional()
   @IsEnum(TaskStatus)

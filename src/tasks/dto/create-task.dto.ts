@@ -1,12 +1,11 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { Task } from '../task.entity';
 
-export class CreateTaskDto implements Pick<Task, 'title' | 'description'> {
+export class CreateTaskDto {
   @IsNotEmpty()
   @IsString()
-  title!: Task['title'];
+  title!: string;
 
   @IsNotEmpty()
   @IsString()
-  description!: Task['description'];
+  description!: string;
 }
