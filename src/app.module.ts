@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TasksModule } from './tasks/tasks.module';
 import * as entities from './database/entities';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 import Joi from 'joi';
 
 @Module({
@@ -18,9 +19,9 @@ import Joi from 'joi';
         NODE_ENV: Joi.string()
           .valid('development', 'production', 'test')
           .default('development'),
+        JWT_SECRET: Joi.string().required(),
       }),
     }),
-    TasksModule,
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
@@ -35,6 +36,8 @@ import Joi from 'joi';
         entities: Object.values(entities),
       }),
     }),
+    TasksModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
